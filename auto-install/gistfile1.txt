@@ -1,0 +1,13 @@
+function add_parcels() {
+# for Anaconda: https://repo.continuum.io/pkgs/misc/parcels/
+# for Spark2 CSD: http://archive.cloudera.com/spark2/csd/SPARK2_ON_YARN-2.0.0.cloudera2.jar (no .sha file)
+# for Spark2 parcel: http://archive.cloudera.com/spark2/parcels/2.0.0.cloudera2/
+
+}
+
+function add_host_template() {
+}
+
+function consolidate_role_groups() {
+}
+
