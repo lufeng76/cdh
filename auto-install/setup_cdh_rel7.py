@@ -1,4 +1,5 @@
 from __future__ import with_statement
+
 from fabric import tasks
 from fabric.api import *
 from fabric.contrib.console import confirm
@@ -7,21 +8,21 @@ from fabric.network import disconnect_all
 
 env.roledefs = {
     "namenode": [
-        'fengstream-1.gce.cloudera.com'
+        'luf-1.gce.cloudera.com'
     ],
     "datanode": [
-        'fengstream-2.gce.cloudera.com',
-        'fengstream-3.gce.cloudera.com',
-        'fengstream-4.gce.cloudera.com',
+        'luf-2.gce.cloudera.com',
+        'luf-3.gce.cloudera.com',
+        'luf-4.gce.cloudera.com',
     ],    
     "cluster": [
-        'fengstream-1.gce.cloudera.com',
-        'fengstream-2.gce.cloudera.com',
-        'fengstream-3.gce.cloudera.com',
-        'fengstream-4.gce.cloudera.com',
+        'luf-1.gce.cloudera.com',
+        'luf-2.gce.cloudera.com',
+        'luf-3.gce.cloudera.com',
+        'luf-4.gce.cloudera.com',
     ],
     "cdsw": [
-        'timcdsw-5.vpc.cloudera.com'
+        'luf-5.vpc.cloudera.com'
     ],
 }
 
@@ -34,14 +35,14 @@ env.mysql_password = 'root123'
 #repo mode
 env.mariadb_baseurl = 'http://yum.mariadb.org/10.2.1/centos7-amd64/rpms/'
 env.mariadb_jdbc = 'https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.42.tar.gz'
-env.mariadb_baseurl_local = 'http://fengstream-1.gce.cloudera.com/MariaDB/'
+env.mariadb_baseurl_local = 'http://luf-1.gce.cloudera.com/MariaDB/'
 
 #repo mode
 env.cm_baseurl = 'http://archive.cloudera.com/cm5/redhat/7/x86_64/cm/5.13.0/RPMS/x86_64/'
-env.cm_baseurl_local = 'http://fengstream-1.gce.cloudera.com/cm5/'
+env.cm_baseurl_local = 'http://luf-1.gce.cloudera.com/cm5/'
 
 #parcel mode
-env.cdh_parcel = 'http://archive.cloudera.com/cdh5/parcels/5.13.0/CDH-5.13.0-1.cdh5.13.0.p0.29-el7.parcel'
+env.cdh_parcel = 'http://archive.cloudera.com/cdh5/parcels/5.10.1/CDH-5.10.1-1.cdh5.10.1.p0.10-el7.parcel'
 #env.cdh_parcel = 'http://archive.cloudera.com/cdh5/parcels/5.12/CDH-5.12.1-1.cdh5.12.1.p0.3-el7.parcel'
 #env.cdh_parcel = 'http://archive.cloudera.com/cdh5/parcels/5.12.0/CDH-5.12.0-1.cdh5.12.0.p0.29-el7.parcel'
 
@@ -57,12 +58,12 @@ env.anaconda_parcel = 'https://repo.continuum.io/pkgs/misc/parcels/Anaconda-4.2.
 #parcel mode
 env.spark_parcel = 'http://archive.cloudera.com/spark2/parcels/2.2.0/SPARK2-2.2.0.cloudera1-1.cdh5.12.0.p0.142354-el7.parcel'
 env.spark_csd = 'http://archive.cloudera.com/spark2/csd/SPARK2_ON_YARN-2.2.0.cloudera1.jar'
-env.spark_baseurl_local = 'http://fengstream-1.gce.cloudera.com/spark2/'
+env.spark_baseurl_local = 'http://luf-1.gce.cloudera.com/spark2/'
 
 #parcel mode
 env.cdsw_parcel = 'http://archive.cloudera.com/cdsw/1/parcels/1.2.0/CDSW-1.2.0.p1.183075-el7.parcel'
 env.cdsw_csd = 'http://archive.cloudera.com/cdsw/1/csd/CLOUDERA_DATA_SCIENCE_WORKBENCH-1.2.0.jar'
-env.cdsw_baseurl_local = 'http://fengstream-1.gce.cloudera.com/cdsw/'
+env.cdsw_baseurl_local = 'http://luf-1.gce.cloudera.com/cdsw/'
 
 env.jdk18_baseurl = 'http://archive.cloudera.com/director/redhat/7/x86_64/director/2.5.0/RPMS/x86_64/oracle-j2sdk1.8-1.8.0+update121-1.x86_64.rpm'
 env.jce8_baseurl = 'http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip'
@@ -519,7 +520,7 @@ def wget_dir(source_path,target_path):
         else:
             print(source_path + " successfully retrieved!")
     else:
-        print(source_path + " not started on: " + env.host_string + "!")
+        print(source_path + " not started on: " + env.host_string + "!")`
 
 def download_parcel_package(package_name,parcel_url):
     if confirm("Downloading parcel for " + package_name + "?", default=False) == True:
@@ -585,6 +586,8 @@ def install_csd(package_name,csd_url,csd_url_local):
 @roles("namenode")
 def download_other_package():
     download_parcel_package("cdh5",env.cdh_parcel)
+    
+    '''
     download_parcel_package("kafka",env.kafka_parcel)
     download_parcel_package("kudu",env.kudu_parcel)
     download_parcel_package("spark2",env.spark_parcel)
@@ -592,6 +595,7 @@ def download_other_package():
     download_parcel_package("anaconda",env.anaconda_parcel)
     download_csd_package("spark2",env.spark_csd)
     download_csd_package("cdsw",env.cdsw_csd)
+    '''
     
 @roles("namenode")
 def install_csd_first():
@@ -768,19 +772,19 @@ def cdh5_main():
     
     download_other_package()
 
-    ntp()
+    #ntp()
 
-    ip_tables()
+    #ip_tables()
 
-    swappiness()
+    #swappiness()
 
-    nscd()
+    #nscd()
 
-    selinux()
+    #selinux()
 
-    THP()
+    #THP()
 
-    max_open_files()
+    #max_open_files()
         
     install_mysql()
 
@@ -788,7 +792,7 @@ def cdh5_main():
 
     install_kerberos()
     
-    upgrade_java8()
+    #upgrade_java8()
            
 
 
